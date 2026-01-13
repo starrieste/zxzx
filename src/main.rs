@@ -3,12 +3,11 @@ use std::io::{self, Write};
 use std::time::{Instant, Duration};
 
 fn main() -> io::Result<()> {
+    crossterm::terminal::enable_raw_mode()?;
     println!("Start Tapping!");
 
     let mut history: Vec<Instant> = Vec::new();
     let mut total_taps: u64 = 0;
-    
-    crossterm::terminal::enable_raw_mode()?;
     
     loop {
         if event::poll(Duration::from_millis(50))? {
@@ -18,7 +17,7 @@ fn main() -> io::Result<()> {
                 }
                 
                 match key_event.code {
-                    KeyCode::Char('f') | KeyCode::Char('v') => {
+                    KeyCode::Char('z') | KeyCode::Char('x') => {
                         total_taps += 1;
                         history.push(Instant::now());
                     }
@@ -48,5 +47,6 @@ fn main() -> io::Result<()> {
     
     crossterm::terminal::disable_raw_mode()?;
     println!("\nsee you next time!");
+
     Ok(())
 }
