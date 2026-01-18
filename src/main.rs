@@ -8,6 +8,7 @@ fn main() -> io::Result<()> {
 
     let mut history: Vec<Instant> = Vec::new();
     let mut total_taps: u64 = 0;
+    let mut last = None;
     
     loop {
         if event::poll(Duration::from_millis(50))? {
@@ -16,13 +17,14 @@ fn main() -> io::Result<()> {
                     break;
                 }
                 
-                match key_event.code {
-                    KeyCode::Char('z') | KeyCode::Char('x') => {
-                        total_taps += 1;
-                        history.push(Instant::now());
-                    }
-                    _ => {}
+                if Some(key_event.code) == last {
+                    continue;
                 }
+
+                total_taps += 1;
+                history.push(Instant::now());
+
+                last = Some(key_event.code);
             }
         }
 
